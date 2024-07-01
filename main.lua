@@ -1,1143 +1,730 @@
-if game.PlaceId == 142823291 then --Proofing just because ;)
---Note: Don't reset with godmode on or you will be stuck on a black screen for a reasonable amount of time
---Change to false if you dont like printing to console
-local printvar = true
---Change to true if you want to see names instead of murderer, sheriff, and innocents with esp
-local espnames = true
---Change keybinds to your liking
-local coinkey = "c" --Coin grabber keybind
-local MSkey = "m" --Murderer/Sheriff esp keybind
-local playerskey = "q" --All players esp keybind
-local espoffkey = "b" --Turn esp off keybind
-local flykey = "f" --Fly keybind
-local noclipkey = "r" --Noclip keybind
-local godmodekey = "g" --Godmode keybind
-local xrayonkey = "x" --Xray on keybind
-local xrayoffkey = "z" --Xray off keybind
-local bringgunkey = "t" --Teleport to gun keybind
-local hideshowguikey = "p" --Show/Hide gui keybind
---End of easy customization options
-
---Gui Buttons and Status--
+-- https://cdn.discordapp.com/emojis/773022571775262751.png?v=1
+print("Loaded all settings    [1/6]")
+if game.PlaceId ~= 142823291 then game:GetService("TeleportService"):Teleport(142823291) end
+if typeof(getgenv().mm2) == "Instance" then getgenv().mm2:Destroy() end
+local scriptversion = "v1.0.3"
+local ss = getgenv().Settings
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+local camera = workspace.CurrentCamera
+local mouse = player:GetMouse()
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+print("Loaded all variables   [2/6]")
 local MM2 = Instance.new("ScreenGui")
+local Topbar = Instance.new("Frame")
 local Main = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local Murderer = Instance.new("TextButton")
+local UICorner_2 = Instance.new("UICorner")
+local Sheriff = Instance.new("TextButton")
+local UICorner_3 = Instance.new("UICorner")
+local MurdererText = Instance.new("TextLabel")
+local SheriffText = Instance.new("TextLabel")
+local GunDropText = Instance.new("TextLabel")
+local GunDrop = Instance.new("TextButton")
+local UICorner_4 = Instance.new("UICorner")
+local UICorner_5 = Instance.new("UICorner")
 local Title = Instance.new("TextLabel")
-local Coin = Instance.new("TextButton")
-local MSEsp = Instance.new("TextButton")
-local MSESPActive = Instance.new("TextLabel")
-local PlayersEsp = Instance.new("TextButton")
-local PlayersEspActive = Instance.new("TextLabel")
-local EspOff = Instance.new("TextButton")
-local EspOffActive = Instance.new("TextLabel")
-local Run = Instance.new("TextButton")
-local RunActiveGui = Instance.new("TextLabel")
-local Fly = Instance.new("TextButton")
-local FlyActive = Instance.new("TextLabel")
-local Noclip = Instance.new("TextButton")
-local NoclipActive = Instance.new("TextLabel")
-local GodMode = Instance.new("TextButton")
-local GodModeActive = Instance.new("TextLabel")
-local GuiXrayOn = Instance.new("TextButton")
-local GuiXrayOnActive = Instance.new("TextLabel")
-local GuiXrayOff = Instance.new("TextButton")
-local GuiXrayOffActive = Instance.new("TextLabel")
-local BringGun = Instance.new("TextButton")
-local Keybinds = Instance.new("TextButton")
-local KeybindsActive = Instance.new("TextLabel")
-local Hide = Instance.new("TextButton")
-local Show = Instance.new("TextButton")
+local Credit = Instance.new("TextLabel")
+local Spectating = Instance.new("TextLabel")
+print("Loaded all instances   [3/6]")
+if game.PlaceId ~= 142823291 then MM2:Destroy() end
 
---Other Variables
-local runActive = false
-local teamname = "None"
-local murderer = "None"
-local sheriff = "None"
-local player = game:GetService("Players").LocalPlayer
-
-local esp = false
-local plresp
-local track = false
-
-local NClip = false
-local char = game.Players.LocalPlayer.Character
-local obj = game.workspace
-local mouse=game.Players.LocalPlayer:GetMouse()
-local LP = game:GetService("Players").LocalPlayer
-local flyvar = false
-
-local showvar = true
-local inputcode = game:GetService("UserInputService")
-local godmodevar = false
-local keyOff = false
-local NClip = false
-
---Start of Gui--
 MM2.Name = "MM2"
-MM2.Parent = game.CoreGui
-MM2.ResetOnSpawn = false
+MM2.Parent = game:GetService("CoreGui")
+getgenv().mm2 = MM2
+
+Topbar.Name = "Topbar"
+Topbar.Parent = MM2
+Topbar.AnchorPoint = Vector2.new(0.5,0.5)
+Topbar.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
+Topbar.Position = UDim2.new(0.5, 0, 0.375, 0)
+Topbar.Size = UDim2.new(0, 170, 0, 30)
+Topbar.ZIndex = 11
 
 Main.Name = "Main"
-Main.Parent = MM2
-Main.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Main.BorderColor3 = Color3.new(0, 0.607843, 1)
-Main.BorderSizePixel = 5
-Main.Draggable = true
-Main.Position = UDim2.new(0.574999988, 0, 0.349999994, 0)
-Main.Size = UDim2.new(0.2, 0, 0.4, 0)
-Main.Visible = true
-Main.Active = true
+Main.Parent = Topbar
+Main.AnchorPoint = Vector2.new(0.5,0)
+Main.ClipsDescendants = true
+Main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+Main.Position = UDim2.new(0.5, 0, 0, 0)
+Main.Size = UDim2.new(0, 170, 0, 209)
+Main.ZIndex = 10
 
-Title.Name = "Sce mm2 Hub"
-Title.Parent = Main
-Title.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Title.BorderColor3 = Color3.new(0, 0.607843, 1) 
-Title.BorderSizePixel = 5
-Title.Draggable = true
-Title.Size = UDim2.new(1.005, 0, 0.2, 0)
-Title.ZIndex = 3
-Title.Font = Enum.Font.SciFi
-Title.FontSize = Enum.FontSize.Size24
-Title.Text = "Murder Mystery 2"
-Title.TextColor3 = Color3.new(0, 0.607843, 1)
-Title.TextScaled = true
-Title.TextSize = 20
-Title.TextStrokeColor3 = Color3.new(0.129412, 0.54902, 1)
-Title.TextWrapped = true
+UICorner.Name = "UICorner"
+UICorner.CornerRadius = UDim.new(0, 6)
+UICorner.Parent = Main
 
---Start of functions for buttons--
-function Create(base, team, colors1, colors2, colors3, teamname) --For all esps
-	local bb = Instance.new("BillboardGui",player.PlayerGui)
-	bb.Adornee = base
-	bb.ExtentsOffset = Vector3.new(0,1,0)
-	bb.AlwaysOnTop = true
-	bb.Size = UDim2.new(0,5,0,5)
-	bb.StudsOffset = Vector3.new(0,1,0)
-	bb.Name = "tracker"
-	local frame = Instance.new("Frame",bb)
-	frame.ZIndex = 10
-	frame.BackgroundTransparency = 0.3
-	frame.Size = UDim2.new(1,0,1,0)
-	local txtlbl = Instance.new("TextLabel",bb)
-	txtlbl.ZIndex = 10
-	txtlbl.Text = teamname
-	txtlbl.BackgroundTransparency = 1
-	txtlbl.Position = UDim2.new(0,0,0,-35)
-	txtlbl.Size = UDim2.new(1,0,10,0)
-	txtlbl.Font = "ArialBold"
-	txtlbl.FontSize = "Size12"
-	txtlbl.TextStrokeTransparency = 0.5
-	if team then --For teams, left over from origianl but never removed
-		txtlbl.TextColor3 = Color3.new(0,0,255)
-		frame.BackgroundColor3 = Color3.new(0,0,255)
-	else
-		txtlbl.TextColor3 = Color3.new(colors1,colors2,colors3)
-		frame.BackgroundColor3 = Color3.new(colors1,colors2,colors3)
+Murderer.Name = "Murderer"
+Murderer.Parent = Main
+Murderer.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
+Murderer.Position = UDim2.new(0.0602940023, 0, 0.142000005, 25)
+Murderer.Size = UDim2.new(0, 150, 0, 30)
+Murderer.ZIndex = 11
+Murderer.Font = Enum.Font.GothamBold
+Murderer.Text = "None"
+Murderer.TextColor3 = Color3.fromRGB(255, 100, 100)
+Murderer.TextSize = 16.000
+Murderer.AutoButtonColor = false
+
+UICorner_2.Name = "UICorner"
+UICorner_2.CornerRadius = UDim.new(0, 6)
+UICorner_2.Parent = Murderer
+
+Sheriff.Name = "Sheriff"
+Sheriff.Parent = Main
+Sheriff.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
+Sheriff.Position = UDim2.new(0.0602940321, 0, 0.400999993, 25)
+Sheriff.Size = UDim2.new(0, 150, 0, 30)
+Sheriff.ZIndex = 11
+Sheriff.Font = Enum.Font.GothamBold
+Sheriff.Text = "None"
+Sheriff.TextColor3 = Color3.fromRGB(100, 100, 255)
+Sheriff.TextSize = 16.000
+Sheriff.AutoButtonColor = false
+
+UICorner_3.Name = "UICorner"
+UICorner_3.CornerRadius = UDim.new(0, 6)
+UICorner_3.Parent = Sheriff
+
+MurdererText.Name = "MurdererText"
+MurdererText.Parent = Main
+MurdererText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MurdererText.BackgroundTransparency = 1.000
+MurdererText.Position = UDim2.new(0.0544118881, 0, 0.144037277, 0)
+MurdererText.Size = UDim2.new(0, 150, 0, 24)
+MurdererText.ZIndex = 11
+MurdererText.Font = Enum.Font.GothamBold
+MurdererText.Text = "Murderer"
+MurdererText.TextColor3 = Color3.fromRGB(255, 0, 0)
+MurdererText.TextSize = 16.000
+
+SheriffText.Name = "SheriffText"
+SheriffText.Parent = Main
+SheriffText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SheriffText.BackgroundTransparency = 1.000
+SheriffText.Position = UDim2.new(0.0602941513, 0, 0.403182238, 0)
+SheriffText.Size = UDim2.new(0, 150, 0, 24)
+SheriffText.ZIndex = 11
+SheriffText.Font = Enum.Font.GothamBold
+SheriffText.Text = "Sheriff"
+SheriffText.TextColor3 = Color3.fromRGB(0, 0, 255)
+SheriffText.TextSize = 16.000
+
+GunDropText.Name = "GunDropText"
+GunDropText.Parent = Main
+GunDropText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+GunDropText.BackgroundTransparency = 1.000
+GunDropText.Position = UDim2.new(0.0602941513, 0, 0.661555469, 0)
+GunDropText.Size = UDim2.new(0, 150, 0, 24)
+GunDropText.ZIndex = 11
+GunDropText.Font = Enum.Font.GothamBold
+GunDropText.Text = "Gun Dropped"
+GunDropText.TextColor3 = Color3.fromRGB(0, 255, 0)
+GunDropText.TextSize = 16.000
+
+GunDrop.Name = "GunDrop"
+GunDrop.Parent = Main
+GunDrop.BackgroundColor3 = Color3.fromRGB(19, 19, 19)
+GunDrop.Position = UDim2.new(0.0602940321, 0, 0.660000026, 25)
+GunDrop.Size = UDim2.new(0, 150, 0, 30)
+GunDrop.ZIndex = 11
+GunDrop.Font = Enum.Font.GothamBold
+GunDrop.Text = "nil"
+GunDrop.TextColor3 = Color3.fromRGB(255, 255, 255)
+GunDrop.TextSize = 16.000
+GunDrop.AutoButtonColor = false
+
+UICorner_4.Name = "UICorner"
+UICorner_4.CornerRadius = UDim.new(0, 6)
+UICorner_4.Parent = GunDrop
+
+UICorner_5.Name = "UICorner"
+UICorner_5.CornerRadius = UDim.new(0, 6)
+UICorner_5.Parent = Topbar
+
+Title.Name = "Title"
+Title.Parent = Topbar
+Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundTransparency = 1.000
+Title.BorderSizePixel = 0
+Title.Position = UDim2.new(0.247058824, 0, 0, 0)
+Title.Size = UDim2.new(0, 85, 0, 30)
+Title.ZIndex = 12
+Title.Font = Enum.Font.GothamBold
+Title.Text = "Error Occurred" -- dont change
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 16.000
+
+Credit.Name = "Credit"
+Credit.Parent = Main
+Credit.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Credit.BackgroundTransparency = 1.000
+Credit.Position = UDim2.new(0.06, 0, 0.923, 0)
+Credit.Size = UDim2.new(0, 150, 0, 15)
+Credit.ZIndex = 11
+Credit.Font = Enum.Font.GothamBold
+Credit.Text = "Made by zzerexx#3970"
+Credit.TextColor3 = Color3.fromRGB(255, 255, 255)
+Credit.TextSize = 12.000
+
+Spectating.Name = "Spectating"
+Spectating.Parent = MM2
+Spectating.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Spectating.BackgroundTransparency = 1.000
+Spectating.Position = UDim2.new(0.5, 0, 0.8, 0)
+Spectating.Size = UDim2.new(0, 150, 0, 15)
+Spectating.ZIndex = 15
+Spectating.Font = Enum.Font.GothamBold
+Spectating.Text = "Spectating: None"
+Spectating.TextColor3 = Color3.fromRGB(255, 255, 255)
+Spectating.TextSize = 32.000
+Spectating.AnchorPoint = Vector2.new(0.5,0.5)
+Spectating.Visible = false
+print("Loaded all properties  [4/6]")
+local folder = Instance.new("Folder")
+folder.Parent = MM2
+folder.Name = "Folder"
+function notif(text)
+	if typeof(text) == "string" and ss.Notifications then
+		game.StarterGui:SetCore("SendNotification", {
+			Title = "MM2 Utilities",
+			Text = text,
+			Duration = 1.5,
+		})
 	end
 end
-
-function findmurderer() --Find who the murderer is
-	local colors1 = 255
-	local colors2 = 0
-	local colors3 = 0
-	for i, v in pairs(game:GetService("Players"):GetChildren()) do
-		if v ~= game:GetService("Players").LocalPlayer then
-			for i,v in pairs(v.Backpack:GetChildren()) do --Checks backpack for knife
-				if v.Name == "Knife" then
-					if espnames == true then
-						local teamname = v.Parent.Parent.Name
-						if v.Parent.Parent.Character.Head ~= nil then
-							Create(v.Parent.Parent.Character.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from murderer!")
-							end
-						end
-					elseif espnames == false then
-						local teamname = "Murderer"
-						if v.Parent.Parent.Character.Head ~= nil then
-							Create(v.Parent.Parent.Character.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from murderer!")
-							end
-						end
-					end
-					murderer = v.Parent.Parent.Name
-					if printvar == true then
-						print(murderer.." is Murderer")
-					end
-				end
-			end
-			for i,v in pairs(v.Character:GetChildren()) do --Checks workspace player for knife (holding it)
-				if v.Name == "Knife" then
-					if espnames == true then
-						local teamname = v.Parent.Name
-						if v.Parent.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Parent.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from murderer!")
-							end
-						end
-					elseif espnames == false then
-						local teamname = "Murderer"
-						if v.Parent.Head ~= nil then
-							Create(v.Parent.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from murderer!")
-							end
-						end
-					end
-					murderer = v.Parent.Name
-					if printvar == true then --Tried to failproof to stop printing nil
-						local murderer1 = tostring(v.Parent.Name)
-						print(murderer1.." is Murderer")
-					end
-				end
-			end
-		end
+local aimbottoggled = false
+UIS.InputBegan:Connect(function(input, gameProcessed)
+	if input.KeyCode == Enum.KeyCode.Y then
+		aimbottoggled = not aimbottoggled
+		notif("Aimbot toggled: "..tostring(aimbottoggled))
 	end
-end
-	
-function findsheriff() --Find who the sheriff is
-	local colors1 = 0
-	local colors2 = 0
-	local colors3 = 255
-	for i, v in pairs(game:GetService("Players"):GetChildren()) do
-		if v ~= game:GetService("Players").LocalPlayer then
-			for i,v in pairs(v.Backpack:GetChildren()) do
-				if v.Name == "Revolver" or v.Name == "Gun" then --Lazy to check if its revolver or gun and checks backpack for gun
-					if espnames == true then
-						local teamname = v.Parent.Parent.Name
-						if v.Parent.Parent.Character.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Parent.Parent.Character.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from sheriff!")
-							end
-						end
-					elseif espnames == false then
-						local teamname = "Sheriff"
-						if v.Parent.Parent.Character.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Parent.Parent.Character.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from sheriff!")
-							end
-						end
-					end
-					sheriff = v.Parent.Parent.Name
-					if printvar == true then
-						local sheriff1 = tostring(v.Parent.Parent.Name)
-						print(sheriff1.." is Sheriff")
-					end
-				end
-			end
-			for i,v in pairs(v.Character:GetChildren()) do
-				if v.Name == "Revolver" or v.Name == "Gun" then --Lazy to check if its revolver or gun and checks workspace player for gun (holding it)
-					if espnames == true then
-						local teamname = v.Parent.Name
-						if v.Parent.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Parent.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from sheriff!")
-							end
-						end
-					elseif espnames == false then
-						local teamname = "Sheriff"
-						if v.Parent.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Parent.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from sheriff!")
-							end
-						end
-					end
-					sheriff = v.Parent.Name
-					if printvar == true then
-						local sheriff1 = tostring(v.Parent.Name)
-						print(sheriff1.." is Sheriff")
-					end
-				end
-			end
-		end
+end)
+function sup()
+	for i,v in pairs(folder:GetChildren()) do
+		v:Destroy()
 	end
-end
-
-function findplayers() --Find all players but local player
-	findmurderer() --Finds murderer
-	findsheriff() --Finds sheriff
-	local colors1 = 0
-	local colors2 = 255
-	local colors3 = 0
-	for i, v in pairs(game:GetService("Players"):GetChildren()) do
-		if v ~= game:GetService("Players").LocalPlayer then --If not local player
-			if v.Name ~= murderer then --If not murderer
-				if v.Name ~= sheriff then --If not sheriff
-					if espnames == true then
-						local teamname = v.Name
-						if v.Character.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Character.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from sheriff!")
-							end
-						end
-					elseif espnames == false then
-						local teamname = "Innocents"
-						if v.Parent.Head ~= nil then --Tried to failproof to stop printing nil
-							Create(v.Character.Head, false, colors1 ,colors2, colors3, teamname)
-						else
-							if printvar == true then
-								print("Head missing from sheriff!")
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-end
-
-function Clear() --Clears all the esps
-	for _,v in pairs(player.PlayerGui:children()) do
-		if v.Name == "tracker" and v:isA("BillboardGui") then
+	for i,v in pairs(workspace:GetDescendants()) do
+		if v.Name == "Raggy" and ss.RemoveRagdolls then
+			v:Destroy()
+		elseif v.Name == "GlitchProof" and v.ClassName == "Model" and ss.RemoveBarriers then
 			v:Destroy()
 		end
 	end
-end
-
-function XrayOn(obj) --Enables xray
-	for _,v in pairs(obj:GetChildren()) do 
-		if (v:IsA("BasePart")) and not v.Parent:FindFirstChild("Humanoid") then
-			v.LocalTransparencyModifier = 0.75
-		end
-	XrayOn(v) 
-	end
-end 
-
-function XrayOff(obj) --Disables xray
-	for _,v in pairs(obj:GetChildren()) do
-		if (v:IsA("BasePart")) and not v.Parent:FindFirstChild("Humanoid") then
-			v.LocalTransparencyModifier = 0
-		end XrayOff(v)
-	end
-end
-
-function sFLY() --Fly function
-	repeat wait() until LP and LP.Character and LP.Character:FindFirstChild('Torso') and LP.Character:FindFirstChild('Humanoid')
-	repeat wait() until mouse
-	
-	local T = LP.Character.Torso
-	local CONTROL = {F = 0, B = 0, L = 0, R = 0}
-	local lCONTROL = {F = 0, B = 0, L = 0, R = 0}
-	local SPEED = 0
-	
-	local function FLY()
-		FLYING = true
-		local BG = Instance.new('BodyGyro', T)
-		local BV = Instance.new('BodyVelocity', T)
-		BG.P = 9e4
-		BG.maxTorque = Vector3.new(9e9, 9e9, 9e9)
-		BG.cframe = T.CFrame
-		BV.velocity = Vector3.new(0, 0.1, 0)
-		BV.maxForce = Vector3.new(9e9, 9e9, 9e9)
-		spawn(function()
-			repeat wait()
-				LP.Character.Humanoid.PlatformStand = true
-				if CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0 then
-					SPEED = 50
-				elseif not (CONTROL.L + CONTROL.R ~= 0 or CONTROL.F + CONTROL.B ~= 0) and SPEED ~= 0 then
-					SPEED = 0
-				end
-				if (CONTROL.L + CONTROL.R) ~= 0 or (CONTROL.F + CONTROL.B) ~= 0 then
-					BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (CONTROL.F + CONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(CONTROL.L + CONTROL.R, (CONTROL.F + CONTROL.B) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
-					lCONTROL = {F = CONTROL.F, B = CONTROL.B, L = CONTROL.L, R = CONTROL.R}
-				elseif (CONTROL.L + CONTROL.R) == 0 and (CONTROL.F + CONTROL.B) == 0 and SPEED ~= 0 then
-					BV.velocity = ((workspace.CurrentCamera.CoordinateFrame.lookVector * (lCONTROL.F + lCONTROL.B)) + ((workspace.CurrentCamera.CoordinateFrame * CFrame.new(lCONTROL.L + lCONTROL.R, (lCONTROL.F + lCONTROL.B) * 0.2, 0).p) - workspace.CurrentCamera.CoordinateFrame.p)) * SPEED
-				else
-					BV.velocity = Vector3.new(0, 0.1, 0)
-				end
-				BG.cframe = workspace.CurrentCamera.CoordinateFrame
-			until not FLYING
-			CONTROL = {F = 0, B = 0, L = 0, R = 0}
-			lCONTROL = {F = 0, B = 0, L = 0, R = 0}
-			SPEED = 0
-			BG:destroy()
-			BV:destroy()
-			LP.Character.Humanoid.PlatformStand = false
-		end)
-	end
-	
-	mouse.KeyDown:connect(function(KEY)
-		if KEY:lower() == 'w' then
-			CONTROL.F = 1
-		elseif KEY:lower() == 's' then
-			CONTROL.B = -1
-		elseif KEY:lower() == 'a' then
-			CONTROL.L = -1 
-		elseif KEY:lower() == 'd' then 
-			CONTROL.R = 1
-		end
-	end)
-	
-	mouse.KeyUp:connect(function(KEY)
-		if KEY:lower() == 'w' then
-			CONTROL.F = 0
-		elseif KEY:lower() == 's' then
-			CONTROL.B = 0
-		elseif KEY:lower() == 'a' then
-			CONTROL.L = 0
-		elseif KEY:lower() == 'd' then
-			CONTROL.R = 0
-		end
-	end)
-	FLY()
-end
-
-function NOFLY() --Unfly function
-	FLYING = false
-	LP.Character.Humanoid.PlatformStand = false
-end
-
-local noclipcoro = coroutine.wrap(function() --Noclip function
-	while true do
-		if NClip == true then
-			if game.Players ~= nil then
-				if game.Players.LocalPlayer ~= nil then
-					if game.Players.LocalPlayer.Character ~= nil then
-						if game.Players.LocalPlayer.Character:FindFirstChild("Torso") ~= nil then
-							if game.Players.LocalPlayer.Character:FindFirstChild("Head") ~= nil then
-								game.Players.LocalPlayer.Character.Torso.CanCollide = false
-								game.Players.LocalPlayer.Character.Head.CanCollide = false
-							end
-						end
+	for i,v in pairs(players:GetChildren()) do
+		if v.Name ~= player.Name and not folder:FindFirstChild(v.Name) then
+			if ss.NameEsp then
+				local Billboard = Instance.new("BillboardGui", folder)
+				local Name = Instance.new("TextLabel", Billboard)
+				Billboard.Name = v.Name
+				Billboard.Adornee = v.Character.Head
+				Billboard.Size = UDim2.new(10, 0, 4, 0)
+				Billboard.ExtentsOffset = Vector3.new(0, 3, 0)
+				Billboard.AlwaysOnTop = true
+				Billboard.MaxDistance = math.huge
+				Name.Name = "Name"
+				Name.BackgroundTransparency = 1
+				Name.TextTransparency = ss.NameTextTransparency
+				Name.BorderSizePixel = 0
+				Name.Font = ss.NameFont
+				Name.Size = UDim2.new(1, 0, 1, 0)
+				Name.Text = v.Name
+				Name.TextColor3 = ss.InnocentColor
+				Name.TextScaled = false
+				Name.TextSize = 18
+				if v.Backpack:FindFirstChild("Knife") or v.Character:FindFirstChild("Knife") then
+					Murderer.Text = v.Name
+					Name.TextColor3 = ss.MurdererColor
+					if not Murderer.TextFits then
+						Murderer.TextScaled = true
+					else
+						Murderer.TextScaled = false
 					end
+				elseif v.Backpack:FindFirstChild("Gun") or v.Character:FindFirstChild("Gun") then
+					Sheriff.Text = v.Name
+					Name.TextColor3 = ss.SheriffColor
+					if not Sheriff.TextFits then
+						Sheriff.TextScaled = true
+					else
+						Sheriff.TextScaled = false
+					end
+				elseif ss.AvoidInnocents and not v.Backpack:FindFirstChild("Knife") or v.Character:FindFirstChild("Knife") or v.Backpack:FindFirstChild("Gun") or v.Character:FindFirstChild("Gun") then
+					Billboard:Destroy()
 				end
+			end -- ss.NameEsp
+		end -- Name Check
+	end -- for i,v
+	if workspace:FindFirstChild("GunDrop",true) then
+		if ss.GunEsp then
+			local GunEsp = Instance.new("BoxHandleAdornment", folder)
+			GunEsp.Name = "Gun"
+			GunEsp.Adornee = game.Workspace.GunDrop
+			GunEsp.AlwaysOnTop = true
+			GunEsp.Color3 = ss.GunEspColor
+			GunEsp.Size = game.Workspace.GunDrop.Size
+			GunEsp.Transparency = 0.6
+			GunEsp.ZIndex = 0
+			if ss.GunNameEsp then
+				local Billboard = Instance.new("BillboardGui", folder)
+				local Name = Instance.new("TextLabel", Billboard)
+				Billboard.Name = "Gun"
+				Billboard.Adornee = game.Workspace.GunDrop
+				Billboard.Size = UDim2.new(10, 0, 4, 0)
+				Billboard.ExtentsOffset = Vector3.new(0, 3, 0)
+				Billboard.AlwaysOnTop = true
+				Billboard.MaxDistance = math.huge
+				Name.Name = "Name"
+				Name.BackgroundTransparency = 1
+				Name.TextTransparency = ss.GunNameTransparency
+				Name.BorderSizePixel = 0
+				Name.Font = ss.NameFont
+				Name.Size = UDim2.new(1, 0, 1, 0)
+				Name.Text = "Gun"
+				Name.TextColor3 = ss.GunNameColor
+				Name.TextScaled = false
+				Name.TextSize = 18
 			end
 		end
-	game:service("RunService").Stepped:wait()
-	end
-end)
-
-noclipcoro() --For noclip to work
-
-game:GetService("Players").LocalPlayer.CharacterAdded:connect(function(character) --Resets specific things for ease
-	flyvar = false
-	FlyActive.Text = "Inactive"
-	FlyActive.TextColor3 = Color3.new(1, 0, 1)
-	godmodevar = false
-	GodModeActive.Text = "Inactive"
-	GodModeActive.TextColor3 = Color3.new(1, 0, 1)
-	Clear()
-	MSESPActive.Text = "Inactive"
-	MSESPActive.TextColor3 = Color3.new(1, 0, 1)
-	PlayersEspActive.Text = "Inactive"
-	PlayersEspActive.TextColor3 = Color3.new(1, 0, 1)
-	EspOffActive.Text = "Active"
-	EspOffActive.TextColor3 = Color3.new(0, 1, 0)
-end)
-
-mouse.KeyDown:connect(function(KeyDown) --If shift is held, run
-	if KeyDown == "0" and runActive == false and keyOff == false then
-		runActive = true
-		player.Character.Humanoid.WalkSpeed = 32
-		RunActiveGui.Text = "Active"
-		RunActiveGui.TextColor3 = Color3.new(0, 1, 0)
-	end
-end)
-
-mouse.KeyUp:connect(function(KeyUp) --If shift is released, walk
-	if KeyUp == "0" and runActive == true and keyOff == false then
-		runActive = false
-		player.Character.Humanoid.WalkSpeed = 16
-		RunActiveGui.Text = "Inactive"
-		RunActiveGui.TextColor3 = Color3.new(1, 0, 1)
-	end
-end)
-
-function coingrabberfunc() --Coin grabber function
-	local children = game.Workspace:GetChildren()
-	for _, child in pairs(children) do
-  		for _, child in pairs(child:GetChildren()) do
-       		table.insert(children, child)
-  		 end
-  		 if child:IsA("BasePart") and child.Name == "Coin" then
-         	child.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+		if ss.AutoPickupGun then
+			local hrp = player.Character.HumanoidRootPart
+			local OldCF = hrp.CFrame
+			hrp.CFrame = game.Workspace.GunDrop.CFrame
+			wait(0.2)
+			hrp.CFrame = OldCF
 		end
-  	end
-end
-
-function godmodefunc() --Godmode function
-	local player = game.Players.LocalPlayer
-	if player.Character then
-		if player.Character:FindFirstChild("Humanoid") then
-			player.Character.Humanoid.Name = "1"
-		end
-		local l = player.Character["1"]:Clone()
-		l.Parent = player.Character
-		l.Name = "Humanoid"; wait(0.1)
-		player.Character["1"]:Destroy()
-		workspace.CurrentCamera.CameraSubject = player.Character.Humanoid
-		player.Character.Animate.Disabled = true; wait(0.1)
-		player.Character.Animate.Disabled = false
-	end
-end
-
---Coin Grabber--
-Coin.Name = "CoinGrabber"
-Coin.Parent = Main
-Coin.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Coin.BorderColor3 = Color3.new(0, 0.607843, 1)
-Coin.BorderSizePixel = 5
-Coin.Position = UDim2.new(0, 0, 0.215, 0)
-Coin.Size = UDim2.new(1.005, 0, 0.08, 0)
-Coin.ZIndex = 4
-Coin.Font = Enum.Font.SciFi
-Coin.FontSize = Enum.FontSize.Size24
-Coin.Text = "Coin Grabber ["..string.upper(coinkey).."]"
-Coin.TextColor3 = Color3.fromRGB(255, 255, 26)
-Coin.TextSize = 20
-Coin.TextWrapped = true
-Coin.MouseButton1Down:connect(function(x, y)
-	coingrabberfunc()
-end)
-
---Murderer/Sheriff Esp--
-MSESPActive.Name = "MSEspActive"
-MSESPActive.Parent = Main
-MSESPActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-MSESPActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-MSESPActive.BorderSizePixel = 5
-MSESPActive.Position = UDim2.new(0.755, 0, 0.315, 0)
-MSESPActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-MSESPActive.ZIndex = 4
-MSESPActive.Font = Enum.Font.SciFi
-MSESPActive.FontSize = Enum.FontSize.Size24
-MSESPActive.Text = "Inactive"
-MSESPActive.TextColor3 = Color3.new(1, 0, 1)
-MSESPActive.TextSize = 20
-MSESPActive.TextWrapped = true
-
-MSEsp.Name = "MSEsp"
-MSEsp.Parent = Main
-MSEsp.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-MSEsp.BorderColor3 = Color3.new(0, 0.607843, 1)
-MSEsp.BorderSizePixel = 5
-MSEsp.Position = UDim2.new(0, 0, 0.315, 0)
-MSEsp.Size = UDim2.new(0.75, 0, 0.08, 0)
-MSEsp.ZIndex = 4
-MSEsp.Font = Enum.Font.SciFi
-MSEsp.FontSize = Enum.FontSize.Size24
-MSEsp.Text = "Murderer/Sheriff Esp ["..string.upper(MSkey).."]"
-MSEsp.TextColor3 = Color3.fromRGB(255, 102, 255)
-MSEsp.TextSize = 20
-MSEsp.TextWrapped = true
-MSEsp.MouseButton1Down:connect(function(x, y)
-	murderer = "None"
-	sheriff = "None"
-	Clear()
-	findmurderer()
-	findsheriff()
-	if printvar == true then
-		print("Murderer/Sheriff")
-	end
-	MSESPActive.Text = "Active"
-	MSESPActive.TextColor3 = Color3.new(0, 1, 0)
-	PlayersEspActive.Text = "Inactive"
-	PlayersEspActive.TextColor3 = Color3.new(1, 0, 1)
-	EspOffActive.Text = "Inactive"
-	EspOffActive.TextColor3 = Color3.new(1, 0, 1)
-end)
-
---All Players Esp
-PlayersEspActive.Name = "PlayersEspActive"
-PlayersEspActive.Parent = Main
-PlayersEspActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-PlayersEspActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-PlayersEspActive.BorderSizePixel = 5
-PlayersEspActive.Position = UDim2.new(0.755, 0, 0.415, 0)
-PlayersEspActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-PlayersEspActive.ZIndex = 4
-PlayersEspActive.Font = Enum.Font.SciFi
-PlayersEspActive.FontSize = Enum.FontSize.Size24
-PlayersEspActive.Text = "Inactive"
-PlayersEspActive.TextColor3 = Color3.new(1, 0, 1)
-PlayersEspActive.TextSize = 20
-PlayersEspActive.TextWrapped = true
-
-PlayersEsp.Name = "PlayersEsp"
-PlayersEsp.Parent = Main
-PlayersEsp.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-PlayersEsp.BorderColor3 = Color3.new(0, 0.607843, 1)
-PlayersEsp.BorderSizePixel = 5
-PlayersEsp.Position = UDim2.new(0, 0, 0.415, 0)
-PlayersEsp.Size = UDim2.new(0.75, 0, 0.08, 0)
-PlayersEsp.ZIndex = 4
-PlayersEsp.Font = Enum.Font.SciFi
-PlayersEsp.FontSize = Enum.FontSize.Size24
-PlayersEsp.Text = "All Players Esp ["..string.upper(playerskey).."]"
-PlayersEsp.TextColor3 = Color3.fromRGB(102, 255, 51)
-PlayersEsp.TextSize = 20
-PlayersEsp.TextWrapped = true
-PlayersEsp.MouseButton1Down:connect(function(x, y)
-	Clear()
-	if printvar == true then
-		print("Players Esp")
-	end
-	MSESPActive.Text = "Inactive"
-	MSESPActive.TextColor3 = Color3.new(1, 0, 1)
-	PlayersEspActive.Text = "Active"
-	PlayersEspActive.TextColor3 = Color3.new(0, 1, 0)
-	EspOffActive.Text = "Inactive"
-	EspOffActive.TextColor3 = Color3.new(1, 0, 1)
-	findplayers()
-end)
-
---Esp Off
-EspOffActive.Name = "EspOffActive"
-EspOffActive.Parent = Main
-EspOffActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-EspOffActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-EspOffActive.BorderSizePixel = 5
-EspOffActive.Position = UDim2.new(0.755, 0, 0.515, 0)
-EspOffActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-EspOffActive.ZIndex = 4
-EspOffActive.Font = Enum.Font.SciFi
-EspOffActive.FontSize = Enum.FontSize.Size24
-EspOffActive.Text = "Active"
-EspOffActive.TextColor3 = Color3.new(0, 1, 0)
-EspOffActive.TextSize = 20
-EspOffActive.TextWrapped = true
-
-EspOff.Name = "EspOff"
-EspOff.Parent = Main
-EspOff.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-EspOff.BorderColor3 = Color3.new(0, 0.607843, 1)
-EspOff.BorderSizePixel = 5
-EspOff.Position = UDim2.new(0, 0, 0.515, 0)
-EspOff.Size = UDim2.new(0.75, 0, 0.08, 0)
-EspOff.ZIndex = 4
-EspOff.Font = Enum.Font.SciFi
-EspOff.FontSize = Enum.FontSize.Size24
-EspOff.Text = "Esp Off ["..string.upper(espoffkey).."]"
-EspOff.TextColor3 = Color3.fromRGB(255, 255, 255)
-EspOff.TextSize = 20
-EspOff.TextWrapped = true
-EspOff.MouseButton1Down:connect(function(x, y)
-	Clear()
-	if printvar == true then
-		print("Esp Off")
-	end
-	MSESPActive.Text = "Inactive"
-	MSESPActive.TextColor3 = Color3.new(1, 0, 1)
-	PlayersEspActive.Text = "Inactive"
-	PlayersEspActive.TextColor3 = Color3.new(1, 0, 1)
-	EspOffActive.Text = "Active"
-	EspOffActive.TextColor3 = Color3.new(0, 1, 0)
-end)
-
---Run
-RunActiveGui.Name = "RunActiveGui"
-RunActiveGui.Parent = Main
-RunActiveGui.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-RunActiveGui.BorderColor3 = Color3.new(0, 0.607843, 1)
-RunActiveGui.BorderSizePixel = 5
-RunActiveGui.Position = UDim2.new(0.755, 0, 0.615, 0)
-RunActiveGui.Size = UDim2.new(0.25, 0, 0.08, 0)
-RunActiveGui.ZIndex = 4
-RunActiveGui.Font = Enum.Font.SciFi
-RunActiveGui.FontSize = Enum.FontSize.Size24
-RunActiveGui.Text = "Inactive"
-RunActiveGui.TextColor3 = Color3.new(1, 0, 1)
-RunActiveGui.TextSize = 20
-RunActiveGui.TextWrapped = true
-
-Run.Name = "Run"
-Run.Parent = Main
-Run.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Run.BorderColor3 = Color3.new(0, 0.607843, 1)
-Run.BorderSizePixel = 5
-Run.Position = UDim2.new(0, 0, 0.615, 0)
-Run.Size = UDim2.new(0.75, 0, 0.08, 0)
-Run.ZIndex = 4
-Run.Font = Enum.Font.SciFi
-Run.FontSize = Enum.FontSize.Size24
-Run.Text = "Run [Shift]"
-Run.TextColor3 = Color3.fromRGB(255, 51, 0)
-Run.TextSize = 20
-Run.TextWrapped = true
-Run.MouseButton1Down:connect(function(x, y)
-	if runActive == false then
-		runActive = true
-		player.Character.Humanoid.WalkSpeed = 32
-		RunActiveGui.Text = "Active"
-		RunActiveGui.TextColor3 = Color3.new(0, 1, 0)
-	elseif runActive == true then
-		runActive = false
-		player.Character.Humanoid.WalkSpeed = 16
-		RunActiveGui.Text = "Inactive"
-		RunActiveGui.TextColor3 = Color3.new(1, 0, 1)
-	end
-end)
-
---Fly
-FlyActive.Name = "FlyActive"
-FlyActive.Parent = Main
-FlyActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-FlyActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-FlyActive.BorderSizePixel = 5
-FlyActive.Position = UDim2.new(0.755, 0, 0.715, 0)
-FlyActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-FlyActive.ZIndex = 4
-FlyActive.Font = Enum.Font.SciFi
-FlyActive.FontSize = Enum.FontSize.Size24
-FlyActive.Text = "Inactive"
-FlyActive.TextColor3 = Color3.new(1, 0, 1)
-FlyActive.TextSize = 20
-FlyActive.TextWrapped = true
-
-Fly.Name = "Fly"
-Fly.Parent = Main
-Fly.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Fly.BorderColor3 = Color3.new(0, 0.607843, 1)
-Fly.BorderSizePixel = 5
-Fly.Position = UDim2.new(0, 0, 0.715, 0)
-Fly.Size = UDim2.new(0.75, 0, 0.08, 0)
-Fly.ZIndex = 4
-Fly.Font = Enum.Font.SciFi
-Fly.FontSize = Enum.FontSize.Size24
-Fly.Text = "Fly ["..string.upper(flykey).."]"
-Fly.TextColor3 = Color3.fromRGB(204, 255, 255)
-Fly.TextSize = 20
-Fly.TextWrapped = true
-Fly.MouseButton1Down:connect(function(x, y)
-	if flyvar == false then
-		sFLY()
-		flyvar = true
-		FlyActive.Text = "Active"
-		FlyActive.TextColor3 = Color3.new(0, 1, 0)
-	elseif flyvar == true then
-		flyvar = false
-		NOFLY()
-		FlyActive.Text = "Inactive"
-		FlyActive.TextColor3 = Color3.new(1, 0, 1)
-	end
-end)
-
---Noclip
-NoclipActive.Name = "NoclipActive"
-NoclipActive.Parent = Main
-NoclipActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-NoclipActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-NoclipActive.BorderSizePixel = 5
-NoclipActive.Position = UDim2.new(0.755, 0, 0.815, 0)
-NoclipActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-NoclipActive.ZIndex = 4
-NoclipActive.Font = Enum.Font.SciFi
-NoclipActive.FontSize = Enum.FontSize.Size24
-NoclipActive.Text = "Inactive"
-NoclipActive.TextColor3 = Color3.new(1, 0, 1)
-NoclipActive.TextSize = 20
-NoclipActive.TextWrapped = true
-
-Noclip.Name = "Noclip"
-Noclip.Parent = Main
-Noclip.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Noclip.BorderColor3 = Color3.new(0, 0.607843, 1)
-Noclip.BorderSizePixel = 5
-Noclip.Position = UDim2.new(0, 0, 0.815, 0)
-Noclip.Size = UDim2.new(0.75, 0, 0.08, 0)
-Noclip.ZIndex = 4
-Noclip.Font = Enum.Font.SciFi
-Noclip.FontSize = Enum.FontSize.Size24
-Noclip.Text = "Noclip ["..string.upper(noclipkey).."]"
-Noclip.TextColor3 = Color3.fromRGB(0, 102, 255)
-Noclip.TextSize = 20
-Noclip.TextWrapped = true
-Noclip.MouseButton1Down:connect(function(x, y)
-	if NClip == false then
-		NClip = true
-		if printvar == true then
-			print("Noclip Enabled")
-		end
-		NoclipActive.Text = "Active"
-		NoclipActive.TextColor3 = Color3.new(0, 1, 0)
-	elseif NClip == true then
-		NClip = false
-		if printvar == true then
-			print("Noclip Disabled")
-		end
-		NoclipActive.Text = "Inactive"
-		NoclipActive.TextColor3 = Color3.new(1, 0, 1)
-	end
-end)
-
---GodMode
-GodModeActive.Name = "GodModeActive"
-GodModeActive.Parent = Main
-GodModeActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-GodModeActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-GodModeActive.BorderSizePixel = 5
-GodModeActive.Position = UDim2.new(0.755, 0, 0.915, 0)
-GodModeActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-GodModeActive.ZIndex = 4
-GodModeActive.Font = Enum.Font.SciFi
-GodModeActive.FontSize = Enum.FontSize.Size24
-GodModeActive.Text = "Inactive"
-GodModeActive.TextColor3 = Color3.new(1, 0, 1)
-GodModeActive.TextSize = 20
-GodModeActive.TextWrapped = true
-
-GodMode.Name = "GodMode"
-GodMode.Parent = Main
-GodMode.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-GodMode.BorderColor3 = Color3.new(0, 0.607843, 1)
-GodMode.BorderSizePixel = 5
-GodMode.Position = UDim2.new(0, 0, 0.915, 0)
-GodMode.Size = UDim2.new(0.75, 0, 0.08, 0)
-GodMode.ZIndex = 4
-GodMode.Font = Enum.Font.SciFi
-GodMode.FontSize = Enum.FontSize.Size24
-GodMode.Text = "God Mode ["..string.upper(godmodekey).."]"
-GodMode.TextColor3 = Color3.fromRGB(255, 255, 255)
-GodMode.TextSize = 20
-GodMode.TextWrapped = true
-GodMode.MouseButton1Down:connect(function(x, y)
-	if godmodevar == false then
-		GodModeActive.Text = "Active"
-		GodModeActive.TextColor3 = Color3.new(0, 1, 0)
-		godmodevar = true
-		godmodefunc()
-	end
-end)
-
---Xray On
-GuiXrayOnActive.Name = "GuiXrayOnActive"
-GuiXrayOnActive.Parent = Main
-GuiXrayOnActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-GuiXrayOnActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-GuiXrayOnActive.BorderSizePixel = 5
-GuiXrayOnActive.Position = UDim2.new(0.755, 0, 1.015, 0)
-GuiXrayOnActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-GuiXrayOnActive.ZIndex = 4
-GuiXrayOnActive.Font = Enum.Font.SciFi
-GuiXrayOnActive.FontSize = Enum.FontSize.Size24
-GuiXrayOnActive.Text = "Inactive"
-GuiXrayOnActive.TextColor3 = Color3.new(1, 0, 1)
-GuiXrayOnActive.TextSize = 20
-GuiXrayOnActive.TextWrapped = true
-
-GuiXrayOn.Name = "XrayOn"
-GuiXrayOn.Parent = Main
-GuiXrayOn.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-GuiXrayOn.BorderColor3 = Color3.new(0, 0.607843, 1)
-GuiXrayOn.BorderSizePixel = 5
-GuiXrayOn.Position = UDim2.new(0, 0, 1.015, 0)
-GuiXrayOn.Size = UDim2.new(0.75, 0, 0.08, 0)
-GuiXrayOn.ZIndex = 4
-GuiXrayOn.Font = Enum.Font.SciFi
-GuiXrayOn.FontSize = Enum.FontSize.Size24
-GuiXrayOn.Text = "Xray On ["..string.upper(xrayonkey).."]"
-GuiXrayOn.TextColor3 = Color3.fromRGB(255, 204, 102)
-GuiXrayOn.TextSize = 20
-GuiXrayOn.TextWrapped = true
-GuiXrayOn.MouseButton1Down:connect(function(x, y)
-	GuiXrayOnActive.Text = "Active"
-	GuiXrayOnActive.TextColor3 = Color3.new(0, 1, 0)
-	GuiXrayOffActive.Text = "Inactive"
-	GuiXrayOffActive.TextColor3 = Color3.new(1, 0, 1)
-	XrayOn(obj)
-end)
-
---Xray Off
-GuiXrayOffActive.Name = "GuiXrayOffActive"
-GuiXrayOffActive.Parent = Main
-GuiXrayOffActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-GuiXrayOffActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-GuiXrayOffActive.BorderSizePixel = 5
-GuiXrayOffActive.Position = UDim2.new(0.755, 0, 1.115, 0)
-GuiXrayOffActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-GuiXrayOffActive.ZIndex = 4
-GuiXrayOffActive.Font = Enum.Font.SciFi
-GuiXrayOffActive.FontSize = Enum.FontSize.Size24
-GuiXrayOffActive.Text = "Active"
-GuiXrayOffActive.TextColor3 = Color3.new(0, 1, 0)
-GuiXrayOffActive.TextSize = 20
-GuiXrayOffActive.TextWrapped = true
-
-GuiXrayOff.Name = "XrayOff"
-GuiXrayOff.Parent = Main
-GuiXrayOff.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-GuiXrayOff.BorderColor3 = Color3.new(0, 0.607843, 1)
-GuiXrayOff.BorderSizePixel = 5
-GuiXrayOff.Position = UDim2.new(0, 0, 1.115, 0)
-GuiXrayOff.Size = UDim2.new(0.75, 0, 0.08, 0)
-GuiXrayOff.ZIndex = 4
-GuiXrayOff.Font = Enum.Font.SciFi
-GuiXrayOff.FontSize = Enum.FontSize.Size24
-GuiXrayOff.Text = "Xray Off ["..string.upper(xrayoffkey).."]"
-GuiXrayOff.TextColor3 = Color3.fromRGB(255, 153, 51)
-GuiXrayOff.TextSize = 20
-GuiXrayOff.TextWrapped = true
-GuiXrayOff.MouseButton1Down:connect(function(x, y)
-	GuiXrayOnActive.Text = "Inactive"
-	GuiXrayOnActive.TextColor3 = Color3.new(1, 0, 1)
-	GuiXrayOffActive.Text = "Active"
-	GuiXrayOffActive.TextColor3 = Color3.new(0, 1, 0)
-	XrayOff(obj)
-end)
-
---Bring Gun to You
-BringGun.Name = "BringGun"
-BringGun.Parent = Main
-BringGun.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-BringGun.BorderColor3 = Color3.new(0, 0.607843, 1)
-BringGun.BorderSizePixel = 5
-BringGun.Position = UDim2.new(0, 0, 1.215, 0)
-BringGun.Size = UDim2.new(1.005, 0, 0.08, 0)
-BringGun.ZIndex = 4
-BringGun.Font = Enum.Font.SciFi
-BringGun.FontSize = Enum.FontSize.Size24
-BringGun.Text = "Teleport Gun ["..string.upper(bringgunkey).."]"
-BringGun.TextColor3 = Color3.fromRGB(0, 255, 0)
-BringGun.TextSize = 20
-BringGun.TextWrapped = true
-BringGun.MouseButton1Down:connect(function(x, y)
-	if game.Workspace.GunDrop.CFrame ~= nil then
-		game.Workspace.GunDrop.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+		GunDrop.Text = "True"
+		GunDrop.TextColor3 = ss.GColorT
 	else
-		if printvar == true then
-			print("Gun not currently dropped")
+		GunDrop.Text = "False"
+		GunDrop.TextColor3 = ss.GColorF
+	end
+	if ss.Aimbot then
+		local keypressed = false
+		local team
+		local target
+		mouse.Button2Down:Connect(function()
+			keypressed = true
+		end)
+		mouse.Button2Up:Connect(function()
+			keypressed = false
+		end)
+		if player.Backpack:FindFirstChild("Knife") or player.Character:FindFirstChild("Knife") then
+			team = "Murderer"
+			target = players[Sheriff.Text].Character.HumanoidRootPart
+			if ss.AimbotAsMurderer then
+				aimbottoggled = true
+				notif("Aimbot toggled: true (Murderer)")
+				repeat
+					if keypressed and aimbottoggled then
+						camera.CFrame = CFrame.new(camera.CFrame.Position, target.Position)
+					end
+					RunService.RenderStepped:Wait()
+				until players[Sheriff.Text].Character.Humanoid.Health < 1 or team == nil or ss.Aimbot == false or ss.AimbotAsMurderer == false
+			end
+		elseif player.Backpack:FindFirstChild("Gun") or player.Character:FindFirstChild("Gun") then
+			team = "Sheriff"
+			target = players[Murderer.Text].Character.HumanoidRootPart
+			if ss.AimbotAsSheriff then
+				aimbottoggled = true
+				notif("Aimbot toggled: true (Sheriff)")
+				repeat
+					if keypressed and aimbottoggled then
+						camera.CFrame = CFrame.new(camera.CFrame.Position, target.Position)
+					end
+					RunService.RenderStepped:Wait()
+				until players[Murderer.Text].Character.Humanoid.Health < 1 or team == nil or ss.Aimbot == false or ss.AimbotAsSheriff == false
+			end
+		else
+			team = nil
+			target = nil
+			aimbottoggled = false
 		end
 	end
-end)
-
---Keybinds
-KeybindsActive.Name = "KeybindsActive"
-KeybindsActive.Parent = Main
-KeybindsActive.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-KeybindsActive.BorderColor3 = Color3.new(0, 0.607843, 1)
-KeybindsActive.BorderSizePixel = 5
-KeybindsActive.Position = UDim2.new(0.755, 0, 1.315, 0)
-KeybindsActive.Size = UDim2.new(0.25, 0, 0.08, 0)
-KeybindsActive.ZIndex = 4
-KeybindsActive.Font = Enum.Font.SciFi
-KeybindsActive.FontSize = Enum.FontSize.Size24
-KeybindsActive.Text = "Active"
-KeybindsActive.TextColor3 = Color3.new(0, 1, 0)
-KeybindsActive.TextSize = 20
-KeybindsActive.TextWrapped = true
-
-Keybinds.Name = "Keybinds"
-Keybinds.Parent = Main
-Keybinds.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Keybinds.BorderColor3 = Color3.new(0, 0.607843, 1)
-Keybinds.BorderSizePixel = 5
-Keybinds.Position = UDim2.new(0, 0, 1.315, 0)
-Keybinds.Size = UDim2.new(0.75, 0, 0.08, 0)
-Keybinds.ZIndex = 4
-Keybinds.Font = Enum.Font.SciFi
-Keybinds.FontSize = Enum.FontSize.Size24
-Keybinds.Text = "Keybinds [Ctrl]"
-Keybinds.TextColor3 = Color3.fromRGB(255, 255, 255)
-Keybinds.TextSize = 20
-Keybinds.TextWrapped = true
-Keybinds.MouseButton1Down:connect(function(x, y)
-	if keyOff == true then
-		keyOff = false
-		KeybindsActive.Text = "Active"
-		KeybindsActive.TextColor3 = Color3.new(0, 1, 0)
-	elseif keyOff == false then
-		keyOff = true
-		KeybindsActive.Text = "Inactive"
-		KeybindsActive.TextColor3 = Color3.new(1, 0, 1)
-	end
-end)
-
-Show.Name = "Show"
-Show.Parent = MM2
-Show.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Show.BorderColor3 = Color3.new(0, 0.607843, 1)
-Show.BorderSizePixel = 5
-Show.Position = UDim2.new(0, 0, 0.85799998, 0)
-Show.Size = UDim2.new(0.08, 0, 0.04, 0)
-Show.ZIndex = 4
-Show.Font = Enum.Font.SciFi
-Show.FontSize = Enum.FontSize.Size24
-Show.Text = "Show ["..string.upper(hideshowguikey).."]"
-Show.TextColor3 = Color3.new(0, 0.333333, 1)
-Show.TextSize = 20
-Show.TextWrapped = true
-Show.Visible = false
-
-Hide.Name = "Hide"
-Hide.Parent = Main
-Hide.BackgroundColor3 = Color3.new(0.188235, 0.188235, 0.188235)
-Hide.BorderColor3 = Color3.new(0, 0.607843, 1)
-Hide.BorderSizePixel = 5
-Hide.Position = UDim2.new(0, 0, 1.415, 0)
-Hide.Size = UDim2.new(1.005, 0, 0.08, 0)
-Hide.ZIndex = 4
-Hide.Font = Enum.Font.SciFi
-Hide.FontSize = Enum.FontSize.Size24
-Hide.Text = "Hide ["..string.upper(hideshowguikey).."]"
-Hide.TextColor3 = Color3.new(0, 0.333333, 1)
-Hide.TextSize = 20
-Hide.TextWrapped = true
-
-Hide.MouseButton1Down:connect(function(x, y)
-	if showvar == true then
-		showvar = false
-		Main.Visible = false
-		Show.Visible = true
-		if printvar == true then
-			print("Hidden")
+end
+local object = workspace
+function XrayOn(object)
+	for i,v in pairs(object:GetChildren()) do
+		if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
+			if typeof(ss.XrayTransparency) == "number" then
+				v.LocalTransparencyModifier = ss.XrayTransparency
+			end
 		end
+		XrayOn(v)
 	end
-end)
-
-Show.MouseButton1Down:connect(function(x, y)
-	if showvar == false then
-		showvar = true
-		Show.Visible = false
-		Main.Visible = true
-		if printvar == true then
-			print("Shown")
+end
+function XrayOff(object)
+	for i,v in pairs(object:GetChildren()) do
+		if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
+			v.LocalTransparencyModifier = 0
 		end
+		XrayOff(v)
 	end
-end)
-
-inputcode.InputBegan:connect(function(input)
-	if input.KeyCode == Enum.KeyCode.LeftControl then
-		if keyOff == true then
-			keyOff = false
-			KeybindsActive.Text = "Active"
-			KeybindsActive.TextColor3 = Color3.new(0, 1, 0)
-		elseif keyOff == false then
-			keyOff = true
-			KeybindsActive.Text = "Inactive"
-			KeybindsActive.TextColor3 = Color3.new(1, 0, 1)
+end
+local noclip = false
+local xray = false
+local toggle1 = false
+local emotes = false
+UIS.InputBegan:Connect(function(input, gameProcessed)
+	if not gameProcessed then
+		if input.KeyCode == Enum.KeyCode.R and ss.Noclip then
+			noclip = not noclip
+			notif("Noclip toggled: "..tostring(noclip))
+			player.Character.Humanoid:ChangeState(11)
+			repeat
+				player.Character.Humanoid:ChangeState(11)
+				RunService.Stepped:Wait()
+			until noclip == false
 		end
-	end
-end)
-
-mouse.keyDown:connect(function(key)
-	if keyOff == false then
-		if key == coinkey then --Coin Grabber
-			coingrabberfunc()
-		elseif key == MSkey then --Murderer/Sheriff Esp On
-			murderer = "None"
-			sheriff = "None"
-			Clear()
-			findmurderer()
-			findsheriff()
-			if printvar == true then
-				print("Murderer/Sheriff")
-			end
-			MSESPActive.Text = "Active"
-			MSESPActive.TextColor3 = Color3.new(0, 1, 0)
-			PlayersEspActive.Text = "Inactive"
-			PlayersEspActive.TextColor3 = Color3.new(1, 0, 1)
-			EspOffActive.Text = "Inactive"
-			EspOffActive.TextColor3 = Color3.new(1, 0, 1)
-		elseif key == playerskey then --Player Esp On
-			Clear()
-			MSESPActive.Text = "Inactive"
-			MSESPActive.TextColor3 = Color3.new(1, 0, 1)
-			PlayersEspActive.Text = "Active"
-			PlayersEspActive.TextColor3 = Color3.new(0, 1, 0)
-			EspOffActive.Text = "Inactive"
-			EspOffActive.TextColor3 = Color3.new(1, 0, 1)
-			findplayers()
-			if printvar == true then
-				print("Players")
-			end
-		elseif key == espoffkey then --Esp off
-			Clear()
-			if printvar == true then
-				print("Esp Disabled")
-			end
-			MSESPActive.Text = "Inactive"
-			MSESPActive.TextColor3 = Color3.new(1, 0, 1)
-			PlayersEspActive.Text = "Inactive"
-			PlayersEspActive.TextColor3 = Color3.new(1, 0, 1)
-			EspOffActive.Text = "Active"
-			EspOffActive.TextColor3 = Color3.new(0, 1, 0)
-		elseif key == flykey then --Fly
-			if flyvar == false then
-				sFLY()
-				flyvar = true
-				FlyActive.Text = "Active"
-				FlyActive.TextColor3 = Color3.new(0, 1, 0)
-			elseif flyvar == true then
-				flyvar = false
-				NOFLY()
-				FlyActive.Text = "Inactive"
-				FlyActive.TextColor3 = Color3.new(1, 0, 1)
-			end
-		elseif key == noclipkey then --Noclip toggle
-			if NClip == false then
-				NClip = true
-				if printvar == true then
-					print("Noclip Enabled")
-				end
-				NoclipActive.Text = "Active"
-				NoclipActive.TextColor3 = Color3.new(0, 1, 0)
-			elseif NClip == true then
-				NClip = false
-				if printvar == true then
-					print("Noclip Disabled")
-				end
-				NoclipActive.Text = "Inactive"
-				NoclipActive.TextColor3 = Color3.new(1, 0, 1)
-			end
-		elseif key == godmodekey then --Godmode
-			if godmodevar == false then
-				godmodevar = true
-				godmodefunc()
-				GodModeActive.Text = "Active"
-				GodModeActive.TextColor3 = Color3.new(0, 1, 0)
-			end
-		elseif key == xrayonkey then --Xray On
-			GuiXrayOnActive.Text = "Active"
-			GuiXrayOnActive.TextColor3 = Color3.new(0, 1, 0)
-			GuiXrayOffActive.Text = "Inactive"
-			GuiXrayOffActive.TextColor3 = Color3.new(1, 0, 1)
-			XrayOn(obj)
-		elseif key == xrayoffkey then --Xray Off
-			GuiXrayOnActive.Text = "Inactive"
-			GuiXrayOnActive.TextColor3 = Color3.new(1, 0, 1)
-			GuiXrayOffActive.Text = "Active"
-			GuiXrayOffActive.TextColor3 = Color3.new(0, 1, 0)
-			XrayOff(obj)
-		elseif key == bringgunkey then --Teleport Gun to You
-			if game.Workspace.GunDrop.CFrame ~= nil then
-				game.Workspace.GunDrop.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+		if input.KeyCode == Enum.KeyCode.T and ss.Xray then
+			xray = not xray
+			notif("Xray toggled: "..tostring(xray))
+			if xray then
+				XrayOn(object)
 			else
-				if printvar == true then
-					print("Gun not currently dropped")
-				end
+				XrayOff(object)
 			end
-		elseif key == hideshowguikey then --Show/Hide Gui
-			if showvar == false then
-				showvar = true
-				Show.Visible = false
-				Main.Visible = true
-				if printvar == true then
-					print("Shown")
-				end
-			elseif showvar == true then
-				showvar = false
-				Main.Visible = false
-				Show.Visible = true
-				if printvar == true then
-					print("Hidden")
-				end
+		end
+		if input.KeyCode == Enum.KeyCode.Space and ss.InfiniteJump then
+			player.Character.Humanoid:ChangeState(3)
+		end
+		if input.KeyCode == Enum.KeyCode.RightControl then
+			toggle1 = not toggle1
+			if toggle1 then
+				Topbar.Visible = false
+				notif("Gui is now invisible")
+			else
+				Topbar.Visible = true
+				notif("Gui is now visible")
 			end
 		end
 	end
 end)
+local ctrlpressed = false
+mouse.Button1Down:Connect(function()
+	if ctrlpressed and ss.CtrlClickTP then
+		player.Character:MoveTo(mouse.Hit.p)
+	end
+end)
+UIS.InputBegan:Connect(function(input, gameProcessed)
+	if input.KeyCode == Enum.KeyCode.LeftControl and not gameProcessed then
+		ctrlpressed = true
+	end
+end)
+UIS.InputEnded:Connect(function(input, gameProcessed)
+	if input.KeyCode == Enum.KeyCode.LeftControl and not gameProcessed then
+		ctrlpressed = false
+	end
+end)
+local mbtn = false -- murderer button
+local sbtn = false -- sheriff button
+Murderer.MouseButton1Click:Connect(function()
+	if Murderer.Text ~= "None" then
+		if mbtn == false then
+			camera.CameraSubject = players[Murderer.Text].Character.Humanoid
+			Spectating.Visible = true
+			Spectating.Text = "Spectating: "..Murderer.Text
+			Spectating.TextColor3 = Color3.fromRGB(255, 0, 0)
+			mbtn = true
+			sbtn = false
+		elseif mbtn == true then
+			camera.CameraSubject = player.Character.Humanoid
+			Spectating.Visible = false
+			Spectating.Text = "Spectating: None"
+			Spectating.TextColor3 = Color3.fromRGB(255, 255, 255)
+			mbtn = false
+		end
+	end
+end)
+Sheriff.MouseButton1Click:Connect(function()
+	if Sheriff.Text ~= "None" then
+		if sbtn == false then
+			camera.CameraSubject = players[Sheriff.Text].Character.Humanoid
+			Spectating.Visible = true
+			Spectating.Text = "Spectating: "..Sheriff.Text
+			Spectating.TextColor3 = Color3.fromRGB(0, 0, 255)
+			sbtn = true
+			mbtn = false
+		elseif sbtn == true then
+			camera.CameraSubject = player.Character.Humanoid
+			Spectating.Visible = false
+			Spectating.Text = "Spectating: None"
+			Spectating.TextColor3 = Color3.fromRGB(255, 255, 255)
+			sbtn = false
+		end
+	end
+end)
+GunDrop.MouseButton1Click:Connect(function()
+	pcall(function()
+		if workspace:FindFirstChild("GunDrop",true) and GunDrop.Text == "True" then
+			local hrp = player.Character.HumanoidRootPart
+			local OldCF = hrp.CFrame
+			hrp.CFrame = workspace.GunDrop.CFrame
+			wait(0.2)
+			hrp.CFrame = OldCF
+		end
+	end)
+end)
+if ss.UnlockEmotes then
+	player.PlayerGui:WaitForChild("MainGUI")
+	for i,v in pairs(player.PlayerGui.MainGUI.Game.Emotes.EmotePages:GetChildren()) do
+		if v.Name == "MM2 Utilities" then v:Destroy() end
+	end
+	local emote = require(game:GetService("ReplicatedStorage").Modules.EmoteModule).GeneratePage
+	local target = player.PlayerGui.MainGUI.Game.Emotes
+	local emotelist = { "headless","zombie","zen","ninja","floss","dab" }
+	emote(emotelist,target,"MM2 Utilities")
+end
+function dragify(Frame)
+	dragToggle = nil
+	local dragSpeed = 0.5
+	dragInput = nil
+	dragStart = nil
+	local dragPos = nil
+	function updateInput(input)
+		local Delta = input.Position - dragStart
+		local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+		TweenService:Create(Frame, TweenInfo.new(0.25), {Position = Position}):Play()
+	end
+	Frame.InputBegan:Connect(function(input)
+		if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
+			dragToggle = true
+			dragStart = input.Position
+			startPos = Frame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragToggle = false
+				end
+			end)
+		end
+	end)
+	Frame.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+	game:GetService("UserInputService").InputChanged:Connect(function(input)
+		if input == dragInput and dragToggle then
+			updateInput(input)
+		end
+	end)
+end
+dragify(Topbar) -- credit to this guy: https://www.roblox.com/library/5021849770/Smooth-Drag
+function round(num, numDecimalPlaces)
+	return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+end
+
+print("Loaded all scripts     [5/6]")
+function ApplyTheme(Color1, Color2, Color3, MColor1, MColor2, SColor1, SColor2, GColor1, TextFont, TextColor)
+	Topbar.BackgroundColor3 = Color1
+	Murderer.BackgroundColor3 = Color2
+	Sheriff.BackgroundColor3 = Color2
+	GunDrop.BackgroundColor3 = Color2
+	Main.BackgroundColor3 = Color3
+	MurdererText.TextColor3 = MColor1
+	Murderer.TextColor3 = MColor2
+	SheriffText.TextColor3 = SColor1
+	Sheriff.TextColor3 = SColor2
+	GunDropText.TextColor3 = GColor1
+	Title.Font = TextFont
+	Murderer.Font = TextFont
+	MurdererText.Font = TextFont
+	Sheriff.Font = TextFont
+	SheriffText.Font = TextFont
+	GunDrop.Font = TextFont
+	GunDropText.Font = TextFont
+	Credit.Font = TextFont
+	Title.TextColor3 = TextColor
+	Credit.TextColor3 = TextColor
+end
+ApplyTheme(ss.Color1, ss.Color2, ss.Color3, ss.MColor1, ss.MColor2, ss.SColor1, ss.SColor2, ss.GColor1, ss.TextFont, ss.MainTextColor)
+function PresetTheme(Theme)
+	local theme
+	if Theme == "Carbon" then
+		theme = {
+			Color1 = Color3.fromRGB(19,19,19),
+			Color2 = Color3.fromRGB(19,19,19),
+			Color3 = Color3.fromRGB(24,24,24),
+			MColor1 = Color3.fromRGB(255,0,0),
+			MColor2 = Color3.fromRGB(255,255,255),
+			SColor1 = Color3.fromRGB(0,0,255),
+			SColor2 = Color3.fromRGB(255,255,255),
+			GColor1 = Color3.fromRGB(0,255,0),
+			GColorT = Color3.fromRGB(100,255,100),
+			GColorF = Color3.fromRGB(255,100,100),
+			TextFont = ss.TextFont,
+			MainTextColor = Color3.fromRGB(255,255,255)
+		}
+		ApplyTheme(theme.Color1, theme.Color2, theme.Color3, theme.MColor1, theme.MColor2, theme.SColor1, theme.SColor2, theme.GColor1, theme.TextFont, theme.MainTextColor)
+	elseif Theme == "Strawberry" then
+		theme = {
+			Color1 = Color3.fromRGB(244,143,177),
+			Color2 = Color3.fromRGB(244,143,177),
+			Color3 = Color3.fromRGB(248,187,208),
+			MColor1 = Color3.fromRGB(255,0,170),
+			MColor2 = Color3.fromRGB(255,255,255),
+			SColor1 = Color3.fromRGB(255,0,170),
+			SColor2 = Color3.fromRGB(255,255,255),
+			GColor1 = Color3.fromRGB(255,0,170),
+			GColorT = Color3.fromRGB(255,255,255),
+			GColorF = Color3.fromRGB(255,255,255),
+			TextFont = ss.TextFont,
+			MainTextColor = Color3.fromRGB(255,255,255)
+		}
+		ss.GColorT = theme.GColorT
+		ss.GColorF = theme.GColorF
+		ApplyTheme(theme.Color1, theme.Color2, theme.Color3, theme.MColor1, theme.MColor2, theme.SColor1, theme.SColor2, theme.GColor1, theme.TextFont, theme.MainTextColor)
+	elseif Theme == "SkyBlue" then
+		theme = {
+			Color1 = Color3.fromRGB(59,132,235),
+			Color2 = Color3.fromRGB(59,132,235),
+			Color3 = Color3.fromRGB(120,172,245),
+			MColor1 = Color3.fromRGB(0,0,255),
+			MColor2 = Color3.fromRGB(255,255,255),
+			SColor1 = Color3.fromRGB(0,0,255),
+			SColor2 = Color3.fromRGB(255,255,255),
+			GColor1 = Color3.fromRGB(0,0,255),
+			GColorT = Color3.fromRGB(255,255,255),
+			GColorF = Color3.fromRGB(255,255,255),
+			TextFont = ss.TextFont,
+			MainTextColor = Color3.fromRGB(255,255,255)
+		}
+		ss.GColorT = theme.GColorT
+		ss.GColorF = theme.GColorF
+		ApplyTheme(theme.Color1, theme.Color2, theme.Color3, theme.MColor1, theme.MColor2, theme.SColor1, theme.SColor2, theme.GColor1, theme.TextFont, theme.MainTextColor)
+	elseif Theme == "Emerald" then
+		theme = {
+			Color1 = Color3.fromRGB(29,185,84),
+			Color2 = Color3.fromRGB(29,185,84),
+			Color3 = Color3.fromRGB(92,255,105),
+			MColor1 = Color3.fromRGB(0,225,0),
+			MColor2 = Color3.fromRGB(255,255,255),
+			SColor1 = Color3.fromRGB(0,225,0),
+			SColor2 = Color3.fromRGB(255,255,255),
+			GColor1 = Color3.fromRGB(0,225,0),
+			GColorT = Color3.fromRGB(255,255,255),
+			GColorF = Color3.fromRGB(255,255,255),
+			TextFont = ss.TextFont,
+			MainTextColor = Color3.fromRGB(255,255,255)
+		}
+		ss.GColorT = theme.GColorT
+		ss.GColorF = theme.GColorF
+		ApplyTheme(theme.Color1, theme.Color2, theme.Color3, theme.MColor1, theme.MColor2, theme.SColor1, theme.SColor2, theme.GColor1, theme.TextFont, theme.MainTextColor)
+	end
+end
+PresetTheme(ss.PresetTheme)
+print("Applied custom theme   [6/6]")
+Title.Text = "MM2 Utilities"
+local goal1 = {} goal1.TextTransparency = 0
+function fadetext(obj, delay) TweenService:Create(obj, TweenInfo.new(delay,Enum.EasingStyle.Linear,Enum.EasingDirection.Out),goal1):Play() end
+function LoadAnimation()
+	local loadtime = tick()
+	Topbar.Size = UDim2.new(0,0,0,0)
+	Topbar.Visible = false
+	Title.TextTransparency = 1
+	Main.Size = UDim2.new(0,0,0,0)
+	Main.Visible = false
+	MurdererText.TextTransparency = 1
+	Murderer.TextTransparency = 1
+	SheriffText.TextTransparency = 1
+	Sheriff.TextTransparency = 1
+	GunDropText.TextTransparency = 1
+	GunDrop.TextTransparency = 1
+	Credit.TextTransparency = 1
+	Topbar.Visible = true
+	Topbar:TweenSize(UDim2.new(0,30,0,30),"Out","Sine","0.3")
+	wait(0.3)
+	Topbar:TweenSize(UDim2.new(0,170,0,30),"Out","Sine","0.5")
+	wait(0.5)
+	fadetext(Title, 0.5)
+	Main.Visible = true
+	Main.Size = UDim2.new(0,170,0,30)
+	Main:TweenSize(UDim2.new(0,170,0,209),"Out","Sine","0.7")
+	wait(0.2)
+	fadetext(MurdererText, 0.2)
+	wait(0.07)
+	fadetext(Murderer, 0.2)
+	wait(0.07)
+	fadetext(SheriffText, 0.2)
+	wait(0.06)
+	fadetext(Sheriff, 0.2)
+	wait(0.06)
+	fadetext(GunDropText, 0.2)
+	wait(0.05)
+	fadetext(GunDrop, 0.2)
+	wait(0.05)
+	fadetext(Credit, 0.2)
+	print("Loaded animation, took "..round(tick()-loadtime,2).." seconds")
+end
+LoadAnimation()
+local l = game:GetService("Lighting")
+getgenv().oldl = { Ambient = l.Ambient, Brightness = l.Brightness, GlobalShadows = l.GlobalShadows }
+function Refresh()
+	if ss.Enabled then
+		pcall(sup)
+		ApplyTheme(ss.Color1, ss.Color2, ss.Color3, ss.MColor1, ss.MColor2, ss.SColor1, ss.SColor2, ss.GColor1, ss.TextFont, ss.MainTextColor)
+		PresetTheme(ss.PresetTheme)
+		player.Character.Humanoid.WalkSpeed = ss.WalkSpeed
+		player.Character.Humanoid.JumpPower = ss.JumpPower
+		camera.FieldOfView = ss.FieldOfView
+		player.DevCameraOcclusionMode = ss.CameraMode
+		player.CameraMaxZoomDistance = ss.MaxZoom
+		if ss.RemoveBlackScreen then
+			player.PlayerGui.SpawnFade.Fade.Visible = false
+			player.PlayerGui.CameraFade.Fade.Visible = false
+		end
+		if ss.Fullbright then
+			l.Ambient = Color3.fromRGB(255,255,255)
+			l.Brightness = 50
+			l.GlobalShadows = false
+		else
+			l.Ambient = getgenv().oldl.Ambient
+			l.Brightness = getgenv().oldl.Brightness
+			l.GlobalShadows = getgenv().oldl.GlobalShadows
+		end
+		if ss.UnlockEmotes then
+			player.PlayerGui:WaitForChild("MainGUI")
+			local emote = require(game:GetService("ReplicatedStorage").Modules.EmoteModule).GeneratePage
+			local target = player.PlayerGui.MainGUI.Game.Emotes
+			local emotelist = { "headless","zombie","zen","ninja","floss","dab" }
+			if not player.PlayerGui.MainGUI.Game.Emotes.EmotePages:FindFirstChild("MM2 Utilities") then
+				emote(emotelist,target,"MM2 Utilities")
+				notif("Unlocked emotes")
+			end
+		end
+	end
+end
+pcall(Refresh)
+if not getgenv().MM2_UTILITIES_LOADED then
+	print("\n███╗░░░███╗███╗░░░███╗██████╗░  ██╗░░░██╗████████╗██╗██╗░░░░░██╗████████╗██╗███████╗░██████╗\n████╗░████║████╗░████║╚════██╗  ██║░░░██║╚══██╔══╝██║██║░░░░░██║╚══██╔══╝██║██╔════╝██╔════╝\n██╔████╔██║██╔████╔██║░░███╔═╝  ██║░░░██║░░░██║░░░██║██║░░░░░██║░░░██║░░░██║█████╗░░╚█████╗░\n██║╚██╔╝██║██║╚██╔╝██║██╔══╝░░  ██║░░░██║░░░██║░░░██║██║░░░░░██║░░░██║░░░██║██╔══╝░░░╚═══██╗\n██║░╚═╝░██║██║░╚═╝░██║███████╗  ╚██████╔╝░░░██║░░░██║███████╗██║░░░██║░░░██║███████╗██████╔╝\n╚═╝░░░░░╚═╝╚═╝░░░░░╚═╝╚══════╝  ░╚═════╝░░░░╚═╝░░░╚═╝╚══════╝╚═╝░░░╚═╝░░░╚═╝╚══════╝╚═════╝░")
+	print('Press "Left Ctrl" to toggle gui visibility')
+	print('Executing multiple times will cause notification spam, disable "Notifications" to prevent this')
+end
+getgenv().MM2_UTILITIES_LOADED = true
+local currentversion = game:HttpGet("https://pastebin.com/raw/5KYjyD9b")
+if scriptversion ~= currentversion then
+	local bind = Instance.new("BindableFunction")
+	function bind.OnInvoke(response)
+		if response == "Yes" and typeof(setclipboard) == "function" then
+			setclipboard("https://pastebin.com/raw/FwYmgtCX")
+			game.StarterGui:SetCore("SendNotification", {
+				Title = "MM2 Utilities",
+				Text = "Copied the script to your clipboard!",
+				Duration = 5,
+			})
+		end
+	end
+	game.StarterGui:SetCore("SendNotification", {
+		Title = "MM2 Utilities",
+		Text = "You are using an older version of MM2 Utilities. Would you like the lastest version?",
+		Duration = 20,
+		Callback = bind,
+		Button1 = "Yes",
+		Button2 = "No"
+	})
+end
+while wait(2) do
+	pcall(Refresh)
 end

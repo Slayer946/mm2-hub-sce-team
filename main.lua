@@ -10,7 +10,7 @@ wait(5)
 
 local Library = loadstring(game:HttpGet("https://pastebin.com/raw/6W1ZqV53"))()
 
-local a = Library:Window("Apollo Hub")
+local a = Library:Window("Sce mm2 hub")
 local emotes = Library:Window("Emotes")
 local esp = Library:Window("ESP")
 local Trolling = Library:Window("Trolling")
